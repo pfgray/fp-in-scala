@@ -1,4 +1,4 @@
-package net.paulgray.chapter3
+package chapter4
 
 sealed trait Either[+E, +A] {
 
