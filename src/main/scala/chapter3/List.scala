@@ -50,4 +50,20 @@ object List {
     case Cons(h, t) => Cons(h, init(t))
   }
 
+  def foldRight[A, B](as: List[A], z: B)(f: (A, B) => B): B =
+    as match {
+      case Nil => z
+      case Cons(h, t) => f(h, foldRight(t, z)(f))
+    }
+
+  // 3.9
+  def length[A](a: List[A]) =
+    foldRight(a, 0)((a,b) => b + 1)
+
+  // 3.10
+  def foldLeft[A, B](as: List[A], z: B)(f: (B, A) => B): B = as match {
+    case Nil => z
+    case Cons(h, t) => foldLeft(t, f(z, h))(f)
+  }
+
 }
