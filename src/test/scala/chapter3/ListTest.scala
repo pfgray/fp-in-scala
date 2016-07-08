@@ -72,4 +72,44 @@ class ListTest extends FlatSpec with Matchers {
 
     List.foldLeft(List(4f, 2f, 1f), 1f)(divide) should equal(((1f / 4f) / 2f) / 1f)
   }
+
+  it should "sum with foldLeft correctly" in {
+    List.sum(List(1, 2, 4)) should equal(7)
+    List.sum(List()) should equal(0)
+    List.sum(List(14)) should equal(14)
+  }
+
+  it should "product with foldLeft correctly" in {
+    List.product(List(1, 2, 4)) should equal(8)
+    List.product(List()) should equal(1)
+    List.product(List(14)) should equal(14)
+    List.product(List(5, 6, 7)) should equal(5 * 6 * 7)
+  }
+
+  it should "find the length of a list with foldLeft correctly" in {
+    List.len(List(1, 2, 4)) should equal(3)
+    List.len(List()) should equal(0)
+    List.len(List(14)) should equal(1)
+    List.len(List(5, 6, 7, 5, 4, 2)) should equal(6)
+  }
+
+  it should "reverse a list with foldRight correctly" in {
+    List.reverse(List(1, 2, 4)) should equal(List(4, 2, 1))
+    List.reverse(Nil) should equal(Nil)
+    List.reverse(List(14)) should equal(List(14))
+    List.reverse(List(5, 6, 7, 5, 4, 2)) should equal(List(2, 4, 5, 7, 6, 5))
+  }
+
+  it should "foldLeft in terms of foldRight correctly" in {
+    List.foldLeft2(List(1f, 2f, 4f), 1f)((a, b) => b / a) should equal(((1f / 1f) / 2f) / 4f)
+
+    List.foldLeft2(List(4f, 2f, 1f), 1f)((a, b) => b / a) should equal(((1f / 4f) / 2f) / 1f)
+  }
+
+  it should "foldRight in terms of foldLeft correctly" in {
+    List.foldRight2(List(1f, 2f, 4f), 1f)((a, b) => b / a) should equal(1f / (2f / (4f / 1f)))
+
+    List.foldRight2(List(4f, 2f, 1f), 1f)((a, b) => b / a) should equal(4f / (2f / (1f / 1f)))
+  }
+
 }
