@@ -93,4 +93,13 @@ object List {
       case Cons(h, t) => foldRight2(t, f(z, h))(f)
     }
 
+  // 3.14
+  def append[A](as: List[A], toAdd: A) =
+    foldRight(as, List[A]()) { (a, b) =>
+      b match {
+        case Nil => Cons(a, List(toAdd))
+        case l: List[A] => Cons(a, l)
+      }
+    }
+
 }

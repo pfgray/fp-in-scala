@@ -112,4 +112,11 @@ class ListTest extends FlatSpec with Matchers {
     List.foldRight2(List(4f, 2f, 1f), 1f)((a, b) => b / a) should equal(4f / (2f / (1f / 1f)))
   }
 
+
+  it should "append correctly" in {
+    List.append(List(1, 2, 4), 8) should equal(List(1, 2, 4, 8))
+
+    List.append(List(), 5) should equal(List(5))
+  }
+
 }
