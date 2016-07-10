@@ -112,11 +112,45 @@ class ListTest extends FlatSpec with Matchers {
     List.foldRight2(List(4f, 2f, 1f), 1f)((a, b) => b / a) should equal(4f / (2f / (1f / 1f)))
   }
 
-
   it should "append correctly" in {
     List.append(List(1, 2, 4), 8) should equal(List(1, 2, 4, 8))
 
     List.append(List(), 5) should equal(List(5))
   }
 
+  it should "flatten correctly" in {
+    List.flatten(List(
+      List(1), List(2, 3), List(5, 6)
+    )) should equal(List(1, 2, 3, 5, 6))
+
+    List.flatten(List(Nil, Nil, List(5))) should equal(List(5))
+
+    List.flatten(List(Nil, Nil)) should equal(Nil)
+  }
+
+  it should "addOne correctly" in {
+    List.addOne(List(1, 5, 8, 1, 4)) should equal(List(2, 6, 9, 2, 5))
+
+    List.addOne(Nil) should equal(Nil)
+
+    List.addOne(List(1)) should equal(List(2))
+  }
+
+  it should "dubs2strs correctly" in {
+    List.dubs2strs(List(1, 5, 8, 1, 4)) should equal(List("1.0", "5.0", "8.0", "1.0", "4.0"))
+
+    List.dubs2strs(Nil) should equal(Nil)
+
+    List.dubs2strs(List(1)) should equal(List("1.0"))
+  }
+
+  it should "map correctly" in {
+    List.map(List(1, 5, 8, 1, 4))(_ + 5) should equal(List(6, 10, 13, 6, 9))
+
+    List.map(List(0, 1, 2, 3, 4))(i => math.pow(i, i)) should equal(List(1d, 1d, 4d, 27d, 256d))
+
+    List.map(Nil)(_.getClass) should equal(Nil)
+
+    List.map(List(0, 1, 2, 3, 4))(_.toString) should equal(List("0", "1", "2", "3", "4"))
+  }
 }

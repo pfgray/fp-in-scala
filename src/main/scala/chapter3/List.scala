@@ -99,4 +99,31 @@ object List {
       Cons(a, b)
     }
 
+  // 3.15
+  def flatten[A](aas: List[List[A]]) =
+    foldRight(aas, List[A]()) { (a1, b1) =>
+      // add all in a to b
+      foldRight(a1, b1) { (a2, b2) =>
+        List.setHead(b2, a2)
+      }
+    }
+
+  // 3.16
+  def addOne(l: List[Int]): List[Int] =
+    foldLeft(l, List[Int]()) { (b, a) =>
+      List.append(b, a + 1)
+    }
+
+  // 3.17
+  def dubs2strs(l: List[Double]): List[String] =
+    foldLeft(l, List[String]()) { (b, a) =>
+      List.append(b, a.toString)
+    }
+
+  // 3.18
+  def map[A,B](as: List[A])(f: A => B): List[B] =
+    foldLeft(as, List[B]()) { (b, a) =>
+      List.append(b, f(a))
+    }
+
 }
