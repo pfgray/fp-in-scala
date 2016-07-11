@@ -153,4 +153,15 @@ class ListTest extends FlatSpec with Matchers {
 
     List.map(List(0, 1, 2, 3, 4))(_.toString) should equal(List("0", "1", "2", "3", "4"))
   }
+
+  it should "flatMap correctly" in {
+    List.flatMap(List(1, 5, 8, 1, 4))(List(_, 1)) should equal(List(1, 1, 5, 1, 8, 1, 1, 1, 4 ,1))
+
+    List.flatMap(List(0, 1, 2, 3, 4))(i => List(math.pow(i, i))) should equal(List(1d, 1d, 4d, 27d, 256d))
+
+    List.flatMap(Nil)(List(_, 2, 3)) should equal(Nil)
+
+    List.flatMap(List(0, 1, 2, 3, 4))(i => List(i.toString, "yo")) should equal(
+      List("0", "yo", "1", "yo", "2", "yo", "3", "yo", "4", "yo"))
+  }
 }

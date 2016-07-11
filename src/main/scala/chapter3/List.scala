@@ -126,4 +126,13 @@ object List {
       List.append(b, f(a))
     }
 
+  // 3.20
+  def flatMap[A,B](as: List[A])(f: A => List[B]): List[B] =
+    foldRight(as, List[B]()) { (a1, b1) =>
+      // Mod a1, then add all in result to b1
+      foldRight(f(a1), b1) { (a2, b2) =>
+        List.setHead(b2, a2)
+      }
+    }
+
 }
