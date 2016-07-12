@@ -184,4 +184,12 @@ class ListTest extends FlatSpec with Matchers {
 
     List.collateAdd(List(0, 1), Nil) should equal(List(0, 1))
   }
+
+  it should "zipWith correctly" in {
+    List.zipWith(List(4, 8, 18), List(2, 2, 3))(_ / _) should equal(List(2, 4, 6))
+
+    List.zipWith(List[String](), Nil)(_.toString + _.toString) should equal(Nil)
+
+    List.zipWith(List(0, 1, 7, 4, 9), List(5, 3, 4, 6))(_ * _) should equal(List(0, 3, 28, 24, 9))
+  }
 }

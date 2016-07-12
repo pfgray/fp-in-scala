@@ -156,7 +156,7 @@ object List {
   // 3.23
   def zipWith[A](as1: List[A], as2: List[A])(f: (A, A) => A): List[A] =
     (as1, as2) match {
-      case Nil, Nil
+      case (Nil, Nil) => Nil
       case (Nil, Cons(h, t)) =>
         List.setHead(zipWith(Nil, t)(f), h)
       case (Cons(h, t), Nil) =>
