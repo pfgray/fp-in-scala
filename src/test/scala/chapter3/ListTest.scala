@@ -164,4 +164,14 @@ class ListTest extends FlatSpec with Matchers {
     List.flatMap(List(0, 1, 2, 3, 4))(i => List(i.toString, "yo")) should equal(
       List("0", "yo", "1", "yo", "2", "yo", "3", "yo", "4", "yo"))
   }
+
+  it should "filter with flatMap correctly" in {
+    List.filter(List(1, 2, 5, 8, 1, 4))(_ % 2 == 0) should equal(List(2, 8, 4))
+
+    List.filter(List(0, 1, 2, 3, 4))(i => i < 2) should equal(List(0, 1))
+
+    List.filter(Nil)(_.toString == "") should equal(Nil)
+
+    List.filter(List("yes", "longer", "no", "longest"))(_.length < 4) should equal(List("yes", "no"))
+  }
 }

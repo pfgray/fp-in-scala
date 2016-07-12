@@ -135,4 +135,10 @@ object List {
       }
     }
 
+  // 3.21
+  def filter[A](as: List[A])(f: A => Boolean): List[A] =
+    List.flatMap(as) { a =>
+      if (f(a)) List(a) else Nil
+    }
+
 }
