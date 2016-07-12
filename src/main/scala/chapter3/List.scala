@@ -153,4 +153,16 @@ object List {
         List.setHead(collateAdd(t1, t2), h1 + h2)
     }
 
+  // 3.23
+  def zipWith[A](as1: List[A], as2: List[A])(f: (A, A) => A): List[A] =
+    (as1, as2) match {
+      case Nil, Nil
+      case (Nil, Cons(h, t)) =>
+        List.setHead(zipWith(Nil, t)(f), h)
+      case (Cons(h, t), Nil) =>
+        List.setHead(zipWith(t, Nil)(f), h)
+      case (Cons(h1, t1), Cons(h2, t2)) =>
+        List.setHead(zipWith(t1, t2)(f), f(h1, h2))
+    }
+
 }
