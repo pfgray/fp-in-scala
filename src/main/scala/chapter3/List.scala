@@ -141,4 +141,16 @@ object List {
       if (f(a)) List(a) else Nil
     }
 
+  // 3.22
+  def collateAdd(as1: List[Int], as2: List[Int]): List[Int] =
+    (as1, as2) match {
+      case (Nil, Nil) => Nil
+      case (Nil, Cons(h, t)) =>
+        List.setHead(collateAdd(Nil, t), h)
+      case (Cons(h, t), Nil) =>
+        List.setHead(collateAdd(t, Nil), h)
+      case (Cons(h1, t1), Cons(h2, t2)) =>
+        List.setHead(collateAdd(t1, t2), h1 + h2)
+    }
+
 }

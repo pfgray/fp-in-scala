@@ -174,4 +174,14 @@ class ListTest extends FlatSpec with Matchers {
 
     List.filter(List("yes", "longer", "no", "longest"))(_.length < 4) should equal(List("yes", "no"))
   }
+
+  it should "collateAdd correctly" in {
+    List.collateAdd(List(1, 2, 5, 8, 1, 4), List(2, 4, 6)) should equal(List(3, 6, 11, 8, 1, 4))
+
+    List.collateAdd(Nil, List(4, 8, 16)) should equal(List(4, 8, 16))
+
+    List.collateAdd(Nil, Nil) should equal(Nil)
+
+    List.collateAdd(List(0, 1), Nil) should equal(List(0, 1))
+  }
 }
