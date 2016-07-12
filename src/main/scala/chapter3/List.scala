@@ -35,7 +35,6 @@ object List {
   // 3.5
   def dropWhile[A](l: List[A], f: A => Boolean): List[A] =
     l match {
-      case Nil => Nil
       case Cons(h, t) if f(h) => dropWhile(t, f)
       case _ => l
     }
@@ -165,4 +164,17 @@ object List {
         List.setHead(zipWith(t1, t2)(f), f(h1, h2))
     }
 
+  // 3.24
+  def hasSubsequence[A](sup: List[A], sub: List[A]): Boolean = {
+    (sup, sub) match {
+      case (_, Nil) => true
+      case (Nil, _) => false
+      case (Cons(h1, t1), Cons(h2, t2)) =>
+        if(h1 == h2 && hasSubsequence(t1, t2)) {
+          true
+        } else {
+          hasSubsequence(t1, Cons(h2, t2))
+        }
+    }
+  }
 }

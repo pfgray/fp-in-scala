@@ -192,4 +192,20 @@ class ListTest extends FlatSpec with Matchers {
 
     List.zipWith(List(0, 1, 7, 4, 9), List(5, 3, 4, 6))(_ * _) should equal(List(0, 3, 28, 24, 9))
   }
+
+  it should "hasSubsequence correctly" in {
+    List.hasSubsequence(List(1, 2, 3, 4), List(2, 3)) should equal(true)
+
+    List.hasSubsequence(List(1, 2, 3, 4), List(1)) should equal(true)
+
+    List.hasSubsequence(List(1, 2, 3, 4), List(3, 4)) should equal(true)
+
+    List.hasSubsequence(List(1, 2, 3, 4), List(4, 3)) should equal(false)
+
+    List.hasSubsequence(List(1, 2, 3, 4), List(5)) should equal(false)
+
+    List.hasSubsequence(Nil, Nil) should equal(true)
+
+    List.hasSubsequence(Nil, List(1)) should equal(false)
+  }
 }
