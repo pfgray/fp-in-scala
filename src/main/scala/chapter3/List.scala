@@ -35,7 +35,6 @@ object List {
   // 3.5
   def dropWhile[A](l: List[A], f: A => Boolean): List[A] =
     l match {
-      case Nil => Nil
       case Cons(h, t) if f(h) => dropWhile(t, f)
       case _ => l
     }
@@ -102,4 +101,83 @@ object List {
       }
     }
 
+  // 3.15
+  def flatten[A](aas: List[List[A]]) =
+    foldRight(aas, List[A]()) { (a1, b1) =>
+      // add all in a to b
+      foldRight(a1, b1) { (a2, b2) =>
+        List.setHead(b2, a2)
+      }
+    }
+
+  // 3.16
+  def addOne(l: List[Int]): List[Int] =
+    foldLeft(l, List[Int]()) { (b, a) =>
+      List.append(b, a + 1)
+    }
+
+  // 3.17
+  def dubs2strs(l: List[Double]): List[String] =
+    foldLeft(l, List[String]()) { (b, a) =>
+      List.append(b, a.toString)
+    }
+
+  // 3.18
+  def map[A,B](as: List[A])(f: A => B): List[B] =
+    foldLeft(as, List[B]()) { (b, a) =>
+      List.append(b, f(a))
+    }
+
+  // 3.20
+  def flatMap[A,B](as: List[A])(f: A => List[B]): List[B] =
+    foldRight(as, List[B]()) { (a1, b1) =>
+      // Mod a1, then add all in result to b1
+      foldRight(f(a1), b1) { (a2, b2) =>
+        List.setHead(b2, a2)
+      }
+    }
+
+  // 3.21
+  def filter[A](as: List[A])(f: A => Boolean): List[A] =
+    List.flatMap(as) { a =>
+      if (f(a)) List(a) else Nil
+    }
+
+  // 3.22
+  def collateAdd(as1: List[Int], as2: List[Int]): List[Int] =
+    (as1, as2) match {
+      case (Nil, Nil) => Nil
+      case (Nil, Cons(h, t)) =>
+        List.setHead(collateAdd(Nil, t), h)
+      case (Cons(h, t), Nil) =>
+        List.setHead(collateAdd(t, Nil), h)
+      case (Cons(h1, t1), Cons(h2, t2)) =>
+        List.setHead(collateAdd(t1, t2), h1 + h2)
+    }
+
+  // 3.23
+  def zipWith[A](as1: List[A], as2: List[A])(f: (A, A) => A): List[A] =
+    (as1, as2) match {
+      case (Nil, Nil) => Nil
+      case (Nil, Cons(h, t)) =>
+        List.setHead(zipWith(Nil, t)(f), h)
+      case (Cons(h, t), Nil) =>
+        List.setHead(zipWith(t, Nil)(f), h)
+      case (Cons(h1, t1), Cons(h2, t2)) =>
+        List.setHead(zipWith(t1, t2)(f), f(h1, h2))
+    }
+
+  // 3.24
+  def hasSubsequence[A](sup: List[A], sub: List[A]): Boolean = {
+    (sup, sub) match {
+      case (_, Nil) => true
+      case (Nil, _) => false
+      case (Cons(h1, t1), Cons(h2, t2)) =>
+        if(h1 == h2 && hasSubsequence(t1, t2)) {
+          true
+        } else {
+          hasSubsequence(t1, Cons(h2, t2))
+        }
+    }
+  }
 }
