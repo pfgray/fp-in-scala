@@ -49,7 +49,7 @@ object Tree {
     }
 
   def sizeWithFold[A](tree: Tree[A]): Int =
-    fold(tree)(a => 1)(_ + _)
+    fold(tree)(a => 1)(_ + _ + 1)
 
   def maximumWithFold(tree: Tree[Int]) =
     fold(tree)(a => a)(_ max _)

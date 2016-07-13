@@ -28,19 +28,19 @@ class TreeTest extends FlatSpec with Matchers {
     Tree.size(Leaf("test")) should equal(1)
   }
 
-  "Tree" should "find the maximum of a tree correctly" in {
+  it should "find the maximum of a tree correctly" in {
     Tree.maximum(testTree) should equal(10)
 
     Tree.maximum(Leaf(0)) should equal(0)
   }
 
-  "Tree" should "find the depth of a tree correctly" in {
+  it should "find the depth of a tree correctly" in {
     Tree.depth(testTree) should equal(4)
 
     Tree.depth(Leaf("test")) should equal(1)
   }
 
-  "Tree" should "map a tree correctly" in {
+  it should "map a tree correctly" in {
     val smallTree = Branch(
       Leaf(5),
       Branch(
@@ -58,6 +58,48 @@ class TreeTest extends FlatSpec with Matchers {
     ))
 
     Tree.map(Leaf("2"))(Integer.valueOf) should equal(Leaf(2))
+  }
+
+  it should "fold a tree correctly" in {
+    Tree.fold(testTree)(a => a)(_ + _) should equal(5 + 6 + 8 + 9 + 10)
+  }
+
+  it should "compute the size of a tree with fold correctly" in {
+    Tree.sizeWithFold(testTree) should equal(9)
+
+    Tree.sizeWithFold(Leaf("test")) should equal(1)
+  }
+
+  it should "find the maximum of a tree with fold correctly" in {
+    Tree.maximumWithFold(testTree) should equal(10)
+
+    Tree.maximumWithFold(Leaf(0)) should equal(0)
+  }
+
+  it should "find the depth of a tree with fold correctly" in {
+    Tree.depthWithFold(testTree) should equal(4)
+
+    Tree.depthWithFold(Leaf("test")) should equal(1)
+  }
+
+  it should "map a tree with fold correctly" in {
+    val smallTree = Branch(
+      Leaf(5),
+      Branch(
+        Leaf(10),
+        Leaf(4)
+      )
+    )
+
+    Tree.mapWithFold(smallTree)(_.toString) should equal(Branch(
+      Leaf("5"),
+      Branch(
+        Leaf("10"),
+        Leaf("4")
+      )
+    ))
+
+    Tree.mapWithFold(Leaf("2"))(Integer.valueOf) should equal(Leaf(2))
   }
 
 }
