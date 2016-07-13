@@ -40,4 +40,24 @@ class TreeTest extends FlatSpec with Matchers {
     Tree.depth(Leaf("test")) should equal(1)
   }
 
+  "Tree" should "map a tree correctly" in {
+    val smallTree = Branch(
+      Leaf(5),
+      Branch(
+        Leaf(10),
+        Leaf(4)
+      )
+    )
+
+    Tree.map(smallTree)(_.toString) should equal(Branch(
+      Leaf("5"),
+      Branch(
+        Leaf("10"),
+        Leaf("4")
+      )
+    ))
+
+    Tree.map(Leaf("2"))(Integer.valueOf) should equal(Leaf(2))
+  }
+
 }
