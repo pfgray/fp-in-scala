@@ -28,4 +28,10 @@ class TreeTest extends FlatSpec with Matchers {
     Tree.size(Leaf("test")) should equal(1)
   }
 
+  "Tree" should "find the maximum of a tree correctly" in {
+    Tree.maximum(testTree) should equal(10)
+
+    Tree.maximum(Leaf(0)) should equal(0)
+  }
+
 }

@@ -18,7 +18,7 @@ object Tree {
     }
 
   // 3.26
-  def maximum[A](tree: Tree[Int]): Int =
+  def maximum(tree: Tree[Int]): Int =
     tree match {
       case Leaf(v) => v
       case Branch(l, r) =>
