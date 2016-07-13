@@ -25,7 +25,7 @@ object Tree {
         maximum(l) max maximum(r)
     }
 
-  //3.27
+  //  3.27
   def depth[A](tree: Tree[A]): Int =
     tree match {
       case Leaf(_) => 1

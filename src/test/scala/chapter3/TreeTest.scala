@@ -34,4 +34,10 @@ class TreeTest extends FlatSpec with Matchers {
     Tree.maximum(Leaf(0)) should equal(0)
   }
 
+  "Tree" should "find the depth of a tree correctly" in {
+    Tree.depth(testTree) should equal(4)
+
+    Tree.depth(Leaf("test")) should equal(1)
+  }
+
 }
