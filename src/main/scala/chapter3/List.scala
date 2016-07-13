@@ -95,9 +95,9 @@ object List {
 
   // 3.14
   def append[A](as: List[A], toAdd: A) =
-    foldRight(as, List[A]()) { (a, b) =>
+    foldRight(as, List[A](toAdd)) { (a, b) =>
       b match {
-        case Nil => Cons(a, List(toAdd))
+        case Nil => Nil // won't ever happen...
         case l: List[A] => Cons(a, l)
       }
     }
