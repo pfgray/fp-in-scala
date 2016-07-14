@@ -1,5 +1,7 @@
 package chapter5
 
+import Stream._
+
 /**
  * Created by nicole on 7/13/16.
  */
@@ -14,17 +16,17 @@ sealed trait Stream[+A] {
 
   // 5.2
   def take(n : Int): Stream[A] =
-    (n, this) match {
-      case (n, Cons(h, t)) if n > 0 =>
-        Cons(h, () => t().take(n - 1))
+    this match {
+      case Cons(h, t) if n > 1 => cons(h(), t().take(n - 1))
+      case Cons(h, t) if n == 1 => cons(h(), empty)
       case _ => Empty
     }
 
   // 5.3
   def drop(n: Int): Stream[A] =
     (n, this) match {
-      case (0, Cons(h, t)) => t()
-      case (n, Cons(h, t)) => t().drop(n-1)
+      case (0, s) => s
+      case (n, Cons(h, t)) => t().drop(n - 1)
       case _ => Empty
     }
 }
