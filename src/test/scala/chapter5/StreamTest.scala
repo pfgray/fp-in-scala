@@ -13,12 +13,12 @@ class StreamTest extends FlatSpec with Matchers {
     intStream.toList should equal(List(1, 2, 3, 4, 5))
   }
 
-//  "Stream" should "take correctly" in {
-//    intStream.take(2) should equal(Stream(1, 2))
-//
-//    Stream("one", "two", "three", "four", throw new Exception("shouldn't fail"))
-//      .take(4) should equal(Stream("one", "two", "three", "four"))
-//  }
+  "Stream" should "take correctly" in {
+    intStream.take(2) should equal(Stream(1, 2))
+
+    Stream("one", "two", "three", "four", throw new Exception("shouldn't fail"))
+      .take(4) should equal(Stream("one", "two", "three", "four"))
+  }
 
 
 }

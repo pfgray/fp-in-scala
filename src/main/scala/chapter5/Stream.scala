@@ -5,12 +5,14 @@ package chapter5
  */
 sealed trait Stream[+A] {
 
+  // 5.1
   def toList: List[A] =
     this match {
       case Empty => Nil
       case Cons(h, t) => List(h()) ::: t().toList
     }
 
+  // 5.2
   def take(n : Int): Stream[A] =
     (n, this) match {
       case (n, Cons(h, t)) if n > 0 =>
@@ -18,6 +20,7 @@ sealed trait Stream[+A] {
       case _ => Empty
     }
 
+  // 5.3
   def drop(n: Int): Stream[A] =
     (n, this) match {
       case (0, Cons(h, t)) => t()
