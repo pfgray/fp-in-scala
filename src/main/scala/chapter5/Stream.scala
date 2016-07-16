@@ -55,16 +55,12 @@ sealed trait Stream[+A] {
       if (p(a)) cons(a, b) else Empty
     }
 
-  // def forAll[A](p: A => Boolean): Boolean =
-  //   foldRight(true) { (a, b) =>
-  //     p(a) && b
-  //   }
-  //
-  // def headOption: A =
-  //   foldRight(None) { (a, b) =>
-  //     Some(a)
-  //   }
-  //
+  // 5.6
+  def headOption: Option[A] =
+    foldRight(None: Option[A]) { (a, b) =>
+      Some(a)
+    }
+
   // def map[B](f: A => B): Stream[B] =
   //   foldRight(Empty) { (a, b) =>
   //     Stream(a, b)

@@ -41,4 +41,13 @@ class StreamTest extends FlatSpec with Matchers {
       .takeWhile(_.toString == "1").toList should equal(List(1))
   }
 
+  it should "headOption correctly" in {
+    intStream.headOption should equal(Some(1))
+
+    Stream(1, () => throw new Exception("shouldn't fail"))
+      .headOption should equal(Some(1))
+
+    Stream.empty[Int].headOption should equal(None)
+  }
+
 }
