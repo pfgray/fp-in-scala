@@ -34,4 +34,11 @@ class StreamTest extends FlatSpec with Matchers {
       .forAll(_.toString == "1") should equal(false)
   }
 
+  it should "takeWhile correctly" in {
+    intStream.takeWhile(_ < 10).toList should equal(List(1, 2, 3, 4, 5))
+
+    Stream(1, 2, () => throw new Exception("shouldn't fail"))
+      .takeWhile(_.toString == "1").toList should equal(List(1))
+  }
+
 }
