@@ -86,4 +86,12 @@ class StreamTest extends FlatSpec with Matchers {
     Stream(1, 2, 3, 4).flatMap(a => Stream(1)).toList should equal(List(1, 1, 1, 1))
   }
 
+  it should "constant correctly" in {
+    Stream.constant("thing").take(5).toList should equal(List("thing", "thing", "thing", "thing", "thing"))
+
+    Stream.constant(1).take(0).toList should equal(Nil)
+
+    Stream.constant(5).take(3).toList should equal(List(5, 5, 5))
+  }
+
 }
