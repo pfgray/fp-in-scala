@@ -116,4 +116,32 @@ class StreamTest extends FlatSpec with Matchers {
     }).take(5).toList should equal(List("yes", "no", "yes", "no", "yes"))
   }
 
+  it should "fibs with unfold correctly" in {
+    Stream.fibs2.take(8).toList should equal(List(0, 1, 1, 2, 3, 5, 8, 13))
+
+    Stream.fibs2.take(0) should equal(Empty)
+  }
+
+  it should "from with unfold correctly" in {
+    Stream.from2(0).take(8).toList should equal(List(0, 1, 2, 3, 4, 5, 6, 7))
+
+    Stream.from2(5).take(5).toList should equal(List(5, 6, 7, 8, 9))
+
+    Stream.from2(100).take(0) should equal(Empty)
+  }
+
+  it should "constant with unfold correctly" in {
+    Stream.constant2("thing").take(5).toList should equal(List("thing", "thing", "thing", "thing", "thing"))
+
+    Stream.constant2(1).take(0).toList should equal(Nil)
+
+    Stream.constant2(5).take(3).toList should equal(List(5, 5, 5))
+  }
+
+  it should "ones with unfold correctly" in {
+    Stream.ones2.take(8).toList should equal(List(1, 1, 1, 1, 1, 1, 1, 1))
+
+    Stream.ones2.take(0) should equal(Empty)
+  }
+
 }
