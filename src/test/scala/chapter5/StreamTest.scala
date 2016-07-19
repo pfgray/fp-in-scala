@@ -102,4 +102,11 @@ class StreamTest extends FlatSpec with Matchers {
     Stream.from(1000).take(3).toList should equal(List(1000, 1001, 1002))
   }
 
+
+  it should "fibs correctly" in {
+    Stream.fibs.take(8).toList should equal(List(0, 1, 1, 2, 3, 5, 8, 13))
+
+    Stream.fibs.take(0) should equal(Empty)
+  }
+
 }
