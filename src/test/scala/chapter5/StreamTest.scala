@@ -94,4 +94,12 @@ class StreamTest extends FlatSpec with Matchers {
     Stream.constant(5).take(3).toList should equal(List(5, 5, 5))
   }
 
+  it should "from correctly" in {
+    Stream.from(10).take(5).toList should equal(List(10, 11, 12, 13, 14))
+
+    Stream.from(100).take(0) should equal(Empty)
+
+    Stream.from(1000).take(3).toList should equal(List(1000, 1001, 1002))
+  }
+
 }
