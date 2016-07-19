@@ -116,10 +116,10 @@ object Stream {
   def fibsFrom(n1: Int, n2: Int): Stream[Int] =
     cons(n1, fibsFrom(n2, n1 + n2))
 
-//  // 5.11
-//  def unfold[A, S](z: S)(f: S => Option[(A, S)]): Stream[A] =
-//    f(z).fold(empty[A]) { case (a, s) =>
-//      cons(a, unfold(s))
-//    }
+  // 5.11
+  def unfold[A, S](z: S)(f: S => Option[(A, S)]): Stream[A] =
+    f(z).fold(empty[A]) { case (a, s) =>
+      cons(a, unfold(s)(f))
+    }
 
 }

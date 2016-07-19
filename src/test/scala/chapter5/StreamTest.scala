@@ -102,11 +102,18 @@ class StreamTest extends FlatSpec with Matchers {
     Stream.from(1000).take(3).toList should equal(List(1000, 1001, 1002))
   }
 
-
   it should "fibs correctly" in {
     Stream.fibs.take(8).toList should equal(List(0, 1, 1, 2, 3, 5, 8, 13))
 
     Stream.fibs.take(0) should equal(Empty)
+  }
+
+  it should "unfold correctly" in {
+    Stream.unfold(10)(a => None).take(8) should equal(Empty)
+
+    val umm = Stream.unfold(0)(num => {
+      if(num == 0) { Some(("yes", 1)) } else { Some(("no", 0)) }
+    }).take(5).toList should equal(List("yes", "no", "yes", "no", "yes"))
   }
 
 }
