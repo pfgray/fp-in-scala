@@ -144,4 +144,60 @@ class StreamTest extends FlatSpec with Matchers {
     Stream.ones2.take(0) should equal(Empty)
   }
 
+  it should "map with unfold correctly" in {
+    intStream.map2(_ * 10).toList should equal(List(10, 20, 30, 40, 50))
+
+    Stream(2, 4, 6, 8, 10).map2(_ / 2).toList should equal(List(1, 2, 3, 4, 5))
+
+    Stream.empty[Int].map2(_.toString) should equal(Empty)
+  }
+
+  it should "take with unfold correctly" in {
+    intStream.take2(2).toList should equal(List(1, 2))
+
+    Stream("one", "two", "three", "four", () => throw new Exception("shouldn't fail"))
+      .take2(4).toList should equal(List("one", "two", "three", "four"))
+  }
+
+  it should "takeWhile with unfold correctly" in {
+    intStream.takeWhile2(_ < 10).toList should equal(List(1, 2, 3, 4, 5))
+
+    Stream(1, 2, () => throw new Exception("shouldn't fail"))
+      .takeWhile2(_.toString == "1").toList should equal(List(1))
+  }
+
+  it should "zipWith with unfold correctly" in {
+    intStream.zipWith(intStream)(_ * _).toList should equal(List(1, 4, 9, 16, 25))
+
+    val strings = Stream("one", "two", "three", "four")
+    strings.zipWith(intStream)(_ + String.valueOf(_)).toList should equal(List("one1", "two2", "three3", "four4"))
+  }
+
+  it should "zipAll with unfold correctly" in {
+    intStream.zipAll(intStream).toList should equal(List(
+      (Some(1), Some(1)),
+      (Some(2), Some(2)),
+      (Some(3), Some(3)),
+      (Some(4), Some(4)),
+      (Some(5), Some(5))
+    ))
+
+    val strings = Stream("one", "two", "three", "four")
+    strings.zipAll(intStream).toList should equal(List(
+      (Some("one"), Some(1)),
+      (Some("two"), Some(2)),
+      (Some("three"), Some(3)),
+      (Some("four"), Some(4)),
+      (None, Some(5))
+    ))
+
+    intStream.zipAll(strings).toList should equal(List(
+      (Some(1), Some("one")),
+      (Some(2), Some("two")),
+      (Some(3), Some("three")),
+      (Some(4), Some("four")),
+      (Some(5), None)
+    ))
+  }
+
 }

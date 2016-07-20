@@ -84,6 +84,47 @@ sealed trait Stream[+A] {
       }
     }
 
+  // 5.13
+  def map2[B](f: A => B): Stream[B] =
+    unfold(0) { n =>
+      drop(n).headOption.map(a => (f(a), n + 1))
+    }
+
+  def take2(n: Int): Stream[A] =
+    unfold(0) { s =>
+      if(s < n) {
+        drop(s).headOption.map((_, s + 1))
+      } else {
+        None
+      }
+    }
+
+  def takeWhile2(f: A => Boolean): Stream[A] =
+    unfold(0) { n =>
+      drop(n).headOption.filter(f).map((_, n + 1))
+    }
+
+  def zipWith[B, C](r: Stream[B])(f: (A, B) => C): Stream[C] =
+    unfold(0) { n =>
+      for {
+        a <- drop(n).headOption
+        b <- r.drop(n).headOption
+      } yield (f(a, b), n + 1)
+    }
+
+  def zipAll[B](s2: Stream[B]): Stream[(Option[A], Option[B])] =
+    unfold(0) { n =>
+      (drop(n).headOption, s2.drop(n).headOption) match {
+        case (None, None) => None
+        case tup => Some((tup, n + 1))
+      }
+    }
+
+//      def hasSubsequence(sub: Stream[A]): Boolean =
+//        unfold(sub) { sub =>
+//
+//        }
+
 }
 
 case object Empty extends Stream[Nothing]
