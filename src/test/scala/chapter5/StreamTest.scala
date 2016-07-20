@@ -10,6 +10,7 @@ import scala.collection.immutable.Stream.cons
 class StreamTest extends FlatSpec with Matchers {
 
   val intStream = Stream(1, 2, 3, 4, 5)
+  val stringStream = Stream("one", "two", "three", "four")
 
   "Stream" should "convert to list correctly" in {
     intStream.toList should equal(List(1, 2, 3, 4, 5))
@@ -169,8 +170,7 @@ class StreamTest extends FlatSpec with Matchers {
   it should "zipWith with unfold correctly" in {
     intStream.zipWith(intStream)(_ * _).toList should equal(List(1, 4, 9, 16, 25))
 
-    val strings = Stream("one", "two", "three", "four")
-    strings.zipWith(intStream)(_ + String.valueOf(_)).toList should equal(List("one1", "two2", "three3", "four4"))
+    stringStream.zipWith(intStream)(_ + String.valueOf(_)).toList should equal(List("one1", "two2", "three3", "four4"))
   }
 
   it should "zipAll with unfold correctly" in {
@@ -182,8 +182,7 @@ class StreamTest extends FlatSpec with Matchers {
       (Some(5), Some(5))
     ))
 
-    val strings = Stream("one", "two", "three", "four")
-    strings.zipAll(intStream).toList should equal(List(
+    stringStream.zipAll(intStream).toList should equal(List(
       (Some("one"), Some(1)),
       (Some("two"), Some(2)),
       (Some("three"), Some(3)),
@@ -191,13 +190,25 @@ class StreamTest extends FlatSpec with Matchers {
       (None, Some(5))
     ))
 
-    intStream.zipAll(strings).toList should equal(List(
+    intStream.zipAll(stringStream).toList should equal(List(
       (Some(1), Some("one")),
       (Some(2), Some("two")),
       (Some(3), Some("three")),
       (Some(4), Some("four")),
       (Some(5), None)
     ))
+  }
+
+  it should "startsWith correctly" in {
+    intStream.startsWith(Stream(1, 2)) should equal(true)
+
+    stringStream.startsWith(Empty) should equal(true)
+
+    stringStream.startsWith(Stream(1)) should equal(false)
+
+    stringStream.startsWith(Stream("one")) should equal(true)
+
+    intStream.startsWith(Stream(5, 3)) should equal(false)
   }
 
 }

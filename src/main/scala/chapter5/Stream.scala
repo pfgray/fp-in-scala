@@ -120,10 +120,14 @@ sealed trait Stream[+A] {
       }
     }
 
-//      def hasSubsequence(sub: Stream[A]): Boolean =
-//        unfold(sub) { sub =>
+//  def hasSubsequence(sub: Stream[A]): Boolean =
+//    unfold(sub) { sub =>
 //
-//        }
+//    }
+
+  // 5.14
+  def startsWith[B >: A](sub: Stream[B]): Boolean =
+    zipWith(sub)(_ == _).forAll(_ == true)
 
 }
 
