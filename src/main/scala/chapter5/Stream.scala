@@ -120,11 +120,6 @@ sealed trait Stream[+A] {
       }
     }
 
-//  def hasSubsequence(sub: Stream[A]): Boolean =
-//    unfold(sub) { sub =>
-//
-//    }
-
   // 5.14
   def startsWith[B >: A](sub: Stream[B]): Boolean =
     zipWith(sub)(_ == _).forAll(_ == true)
@@ -183,5 +178,13 @@ object Stream {
 
   def ones2: Stream[Int] =
     unfold(1)(a => Some((1, 1)))
+
+  // 5.15
+  def tails[A](sub: Stream[A]): Stream[Stream[A]] =
+    unfold(Some(sub): Option[Stream[A]]) {
+      case None => None
+      case Some(Empty) => Some((empty[A], None))
+      case Some(sub) => Some((sub, Some(sub.drop(1))))
+    }
 
 }

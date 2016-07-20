@@ -211,4 +211,18 @@ class StreamTest extends FlatSpec with Matchers {
     intStream.startsWith(Stream(5, 3)) should equal(false)
   }
 
+  it should "tails correctly" in {
+    Stream.tails(Stream(1, 2, 3)).toList.map(_.toList) should equal(List(
+      List(1, 2, 3),
+      List(2, 3),
+      List(3),
+      List()
+    ))
+
+    Stream.tails(Empty).toList.map(_.toList) should equal(List(List()))
+
+    Stream.tails(Stream("one")).toList.map(_.toList) should equal(List(List("one"), List()))
+  }
+
+
 }
