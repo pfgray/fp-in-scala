@@ -51,10 +51,18 @@ class RNGTest extends FlatSpec with Matchers {
   }
 
   it should "generate three doubles correctly" in {
-    val ((n1, n2, n3), rng2) = RNG.double3(rng)
+    val ((n1, n2, n3), _) = RNG.double3(rng)
     assert(List(n1, n2, n3).forall { n =>
       n < 1 && n > 0
     })
+  }
+
+  it should "generate a list of nonNegative integers correctly" in {
+    val (list1, rng2) = RNG.ints(5)(rng)
+    list1.length should equal(5)
+
+    val (list2, _) = RNG.ints(10)(rng2)
+    list2.length should equal(10)
   }
 
 }

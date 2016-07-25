@@ -46,15 +46,16 @@ object RNG {
       ((dub1, dub2, dub3), rng3)
     }
 
-  //  // 6.4
-  //  def ints(count: Int)(rng: RNG): (List[Int], RNG) =
-  //    count match {
-  //      case i if i <= 0 => (Nil, rng)
-  //      case i => {
-  //        val (a, rng2) = nonNegativeInt(a)
-  //        (a :: ints(i - 1)(rng2), rng2)
-  //      }
-  //    }
+    // 6.4
+    def ints(count: Int)(rng: RNG): (List[Int], RNG) =
+      count match {
+        case i if i <= 0 => (Nil, rng)
+        case i => {
+          val (a, rng2) = nonNegativeInt(rng)
+          val (list, rng3) = ints(i - 1)(rng2)
+          (a :: list, rng3)
+        }
+      }
 }
 
 case class SimpleRNG(seed: Long) extends RNG {
