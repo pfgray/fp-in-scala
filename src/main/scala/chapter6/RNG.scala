@@ -17,16 +17,16 @@ object RNG {
       case t => t
     }
 
-  // 6.2
-  //  def double(rng: RNG): (Double, RNG) =
-  //    nonNegativeInt(rng) match {
-  //      case (i, rng) if (i == Int.maxValue) =>
-  //        double(rng)
-  //      case (i, rng) =>
-  //        (i.toDouble /
-  //          Int.maxValue.toDouble, rng)
-  //    }
-  //
+   // 6.2
+  def double(rng: RNG): (Double, RNG) =
+    nonNegativeInt(rng) match {
+      case (i, rng) if (i == Int.MaxValue) =>
+        double(rng)
+      case (i, rng) =>
+        (i.toDouble /
+          Int.MaxValue.toDouble, rng)
+    }
+
   //  // 6.3
   //  def intDouble(rng: RNG): ((Int, Double), RNG) = {
   //    val (int, rng2) = nonNegativeInt(rng)
