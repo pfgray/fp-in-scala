@@ -27,25 +27,25 @@ object RNG {
           Int.MaxValue.toDouble, rng)
     }
 
-  //  // 6.3
-  //  def intDouble(rng: RNG): ((Int, Double), RNG) = {
-  //    val (int, rng2) = nonNegativeInt(rng)
-  //    val (dub, rng3) = double(rng)
-  //    ((int, dub), rng3)
-  //  }
-  //
-  //  def doubleInt(rng: RNG): ((Double, Int), RNG) = {
-  //    val (tup, rng2) = intDouble(rng)
-  //    (tup.swap, rng2)
-  //  }
-  //
-  //  def double3(rng: RNG): ((Double, Double, Double), RNG) = {
-  //    val (dub1, rng1) = double(rng)
-  //    val (dub2, rng2) = double(rng1)
-  //    val (dub3, rng3) = double(rng2)
-  //    ((dub1, dub2, dub3), rng3)
-  //  }
-  //
+    // 6.3
+    def intDouble(rng: RNG): ((Int, Double), RNG) = {
+      val (int, rng2) = nonNegativeInt(rng)
+      val (dub, rng3) = double(rng)
+      ((int, dub), rng3)
+    }
+
+    def doubleInt(rng: RNG): ((Double, Int), RNG) = {
+      val (tup, rng2) = intDouble(rng)
+      (tup.swap, rng2)
+    }
+
+    def double3(rng: RNG): ((Double, Double, Double), RNG) = {
+      val (dub1, rng1) = double(rng)
+      val (dub2, rng2) = double(rng1)
+      val (dub3, rng3) = double(rng2)
+      ((dub1, dub2, dub3), rng3)
+    }
+
   //  // 6.4
   //  def ints(count: Int)(rng: RNG): (List[Int], RNG) =
   //    count match {
