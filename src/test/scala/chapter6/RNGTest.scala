@@ -65,4 +65,12 @@ class RNGTest extends FlatSpec with Matchers {
     list2.length should equal(10)
   }
 
+  it should "generate doubles with map correctly" in {
+    val (n, rng2) = RNG.double2(rng)
+    assert(n < 1 && n > 0)
+
+    val (n2, _) = RNG.double2(rng2)
+    assert(n2 < 1 && n2 > 0)
+  }
+
 }

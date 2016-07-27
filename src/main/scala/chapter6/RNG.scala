@@ -67,8 +67,8 @@ object RNG {
   }
 
   // 6.5
-  def double2(rng: RNG): (Double, RNG) =
-    map(nonNegativeInt _)(_ / Int.MaxValue.toDouble + 1)(rng)
+  def double2: Rand[Double] =
+    map(nonNegativeInt _)(_ / (Int.MaxValue.toDouble + 1))
 
   // 6.6
   def map2[A,B,C](ra: Rand[A], rb: Rand[B])(f: (A, B) => C): Rand[C] =
