@@ -78,6 +78,7 @@ object RNG {
       (f(a, b), rng3)
     }
 
+  // 6.7
   def sequence[A](list: List[Rand[A]]): Rand[List[A]] =
     list match {
       case Nil => unit(Nil)
