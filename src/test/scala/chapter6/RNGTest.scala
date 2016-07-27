@@ -73,4 +73,12 @@ class RNGTest extends FlatSpec with Matchers {
     assert(n2 < 1 && n2 > 0)
   }
 
+  it should "generate map 2 values correctly" in {
+    val getTup = RNG.map2(RNG.nonNegativeInt, RNG.nonNegativeInt) { (a, b) =>
+      (a, b)
+    }
+
+    val ((a, b), rng2) = getTup(rng)
+  }
+
 }
