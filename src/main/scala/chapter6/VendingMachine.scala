@@ -11,18 +11,14 @@ abstract sealed trait Input
 case object Coin extends Input
 case object Turn extends Input
 
-
 object VendingMachine {
-  def simulateMachine(inputs: List[Input]): State[VendingMachine, (Int, Int)] = {
-    inputs.foldLeft(unit[VendingMachine, (Int, Int)]((0, 0))) { (s, input) =>
-      processInput(input)
-    }
-  }
 
-  def simulateMachine2(inputs: List[Input]): State[VendingMachine, (Int, Int)] =
+  def simulateMachine(inputs: List[Input]): State[VendingMachine, (Int, Int)] =
     State(machine => {
       inputs.foldLeft(toTup(machine)) { (s, input) =>
-        processInput(input).run(s._2)
+        val processed = processInput(input).run(s._2)
+        println(s"Processed $input, Now we have machine: ${processed._2}")
+        processed
       }
     })
 
@@ -36,7 +32,7 @@ object VendingMachine {
 
   private def processCoin(m: VendingMachine) =
     if(m.candies > 0){
-      toTup(m.copy(locked = true))
+      toTup(m.copy(locked = false, coins = m.coins + 1))
     } else {
       toTup(m)
     }
