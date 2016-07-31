@@ -1,6 +1,5 @@
 package chapter6
 
-import scala.collection.concurrent.RDCSS_Descriptor
 
 /**
   * Created by paul on 7/27/16.
