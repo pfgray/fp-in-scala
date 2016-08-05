@@ -29,7 +29,18 @@ object Par {
       override def call(): A = a(es).get
     })
 
-  //7.4
+  // 7.4
   def asyncF[A,B](f: A => B): A => Par[B] = a => fork(unit(f(a)))
+
+  // 7.5
+  def sequence[A](ps: List[Par[A]]): Par[List[A]] =
+    ps.foldRight(unit(Nil: List[A])) { (par, l) =>
+      map2(par, l)(_ :: _)
+    }
+
+  implicit class ParExtensions[A](a: Par[A]) {
+    def map[B](f: A => B): Par[B] =
+      map2(a, unit())((a, _) => f(a))
+  }
 
 }
