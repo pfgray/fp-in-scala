@@ -38,6 +38,16 @@ object Par {
       map2(par, l)(_ :: _)
     }
 
+  // 7.6
+  def parFilter[A](as: List[A])(f: A => Boolean): Par[List[A]] = {
+    as.foldRight(unit(Nil: List[A])) { (a, pList) =>
+      println(s"prepping map for:$a")
+      map2(pList, unit(a)) { (ls, a) =>
+        if(f(a)) a :: ls else ls
+      }
+    }
+  }
+
   implicit class ParExtensions[A](a: Par[A]) {
     def map[B](f: A => B): Par[B] =
       map2(a, unit())((a, _) => f(a))
