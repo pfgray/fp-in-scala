@@ -41,7 +41,6 @@ object Par {
   // 7.6
   def parFilter[A](as: List[A])(f: A => Boolean): Par[List[A]] = {
     as.foldRight(unit(Nil: List[A])) { (a, pList) =>
-      println(s"prepping map for:$a")
       map2(pList, unit(a)) { (ls, a) =>
         if(f(a)) a :: ls else ls
       }

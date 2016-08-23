@@ -17,7 +17,6 @@ object VendingMachine {
     State(machine => {
       inputs.foldLeft(toTup(machine)) { (s, input) =>
         val processed = processInput(input).run(s._2)
-        println(s"Processed $input, Now we have machine: ${processed._2}")
         processed
       }
     })

@@ -8,7 +8,7 @@ import chapter7.Par.ParExtensions
 /**
  * Created by nicole on 8/4/16.
  */
-class ParTest  extends FlatSpec with Matchers {
+class ParTest extends FlatSpec with Matchers {
 
   "Par" should "sequence correctly" in {
     val pars = Par.sequence(List(
