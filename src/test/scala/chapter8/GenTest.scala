@@ -8,6 +8,8 @@ import org.scalatest.{Matchers, FlatSpec}
   */
 class GenTest extends FlatSpec with Matchers {
 
+  def intGen = Gen(State(_.nextInt))
+
   case class CountingGenerator(start: Int) extends RNG {
     override def nextInt: (Int, RNG) = {
       (start, CountingGenerator(start + 1))
@@ -27,7 +29,7 @@ class GenTest extends FlatSpec with Matchers {
   }
 
   it should "create a list from a generator" in {
-    val gen = Gen.listOfN(10, Gen(State(_.nextInt)))
+    val gen = Gen.listOfN(10, intGen)
 
     val (result, _) = gen.sample.run(CountingGenerator(0))
 
@@ -35,6 +37,28 @@ class GenTest extends FlatSpec with Matchers {
     result(0) should equal(0)
     result(3) should equal(3)
     result(7) should equal(7)
+  }
+
+  it should "flatmap correctly" in {
+
+    val flatMapped = intGen.flatMap(a => {
+      intGen.flatMap(b => {
+        intGen.flatMap(c => {
+          intGen
+        })
+      })
+    })
+
+    flatMapped.sample.run(CountingGenerator(0))._1 should equal(3)
+  }
+
+  it should "generate a list with flatMap correctly" in {
+
+    val listGen = intGen.listOfN(intGen)
+
+    listGen.sample.run(CountingGenerator(5))._1 should equal(List(6, 7, 8, 9, 10))
+
+
   }
 
 }
