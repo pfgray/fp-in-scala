@@ -34,4 +34,21 @@ object Gen {
     } else {
       Gen(g.sample.map2(listOfN(n - 1, g).sample)((a, lis) => a :: lis))
     }
+
+  // 8.7
+  def union[A](g1: Gen[A], g2: Gen[A]): Gen[A] =
+    Gen.boolean flatMap {
+      case true => g1
+      case false => g2
+    }
+
+  // 8.8
+  def weighted[A](g1: (Gen[A], Double), g2: (Gen[A], Double)): Gen[A] =
+    Gen(State(RNG.double)) flatMap { dub =>
+      dub * (g1._2 + g2._2) match {
+        case a if a <= g1._2 => g1._1
+        case _ => g2._1
+      }
+    }
+
 }
