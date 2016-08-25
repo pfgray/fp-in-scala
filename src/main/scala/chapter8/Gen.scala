@@ -1,7 +1,7 @@
 package chapter8
 
 import chapter6.{State, RNG}
-import chapter8.Prop.{SuccessCount, FailedCase, Result, TestCases}
+import chapter8.Prop.{SuccessCount, FailedCase, TestCases}
 
 /**
   * Created by paul on 8/22/16.
