@@ -1,6 +1,7 @@
 package chapter8
 
 import chapter6.{State, RNG}
+import chapter8.Prop.{SuccessCount, FailedCase, Result, TestCases}
 
 /**
   * Created by paul on 8/22/16.
@@ -50,5 +51,39 @@ object Gen {
         case _ => g2._1
       }
     }
+}
 
+case class Prop(run: (TestCases, RNG) => Result) {
+  // 8.9
+  def &&(p: Prop): Prop = Prop((tc, rng) => {
+    this.run(tc, rng) match {
+      case Passed => p.run(tc, rng)
+      case Falsified(f, s) => Falsified(f, s)
+    }
+  })
+
+  def ||(p: Prop): Prop = Prop((tc, rng) => {
+   this.run(tc, rng) match {
+      case Passed => Passed
+      case Falsified(f, s) => p.run(tc, rng)
+    }
+  })
+
+}
+
+object Prop {
+  type FailedCase = String
+  type TestCases = Int
+  type SuccessCount = Int
+  // type Result = Option[(FailedCase, SuccessCount)]
+}
+
+sealed trait Result {
+  def isFalsified: Boolean
+}
+case object Passed extends Result {
+  override def isFalsified: Boolean = false
+}
+case class Falsified(failure: FailedCase, successCount: SuccessCount) extends Result {
+  override def isFalsified: Boolean = true
 }
