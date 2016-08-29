@@ -16,3 +16,10 @@ case class SGen[+A](forSize: Int => Gen[A]) {
       }
     }
 }
+
+object SGen {
+
+  //8.12
+  def listOf[N](g: Gen[N]): SGen[List[N]] =
+    SGen(Gen.listOfN(_, g))
+}
