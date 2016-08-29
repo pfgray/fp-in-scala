@@ -42,7 +42,8 @@ object Par {
   // 7.6
   def parFilter[A](as: List[A])(f: A => Boolean): Par[List[A]] = {
 //    as.foldRight(unit(Nil: List[A])) { (a, pList) =>
-//      map2(pList, unit(a)) { (ls, a) =>
+//      map2(pList, unit(a)) { (ls, a) =
+
 //        if(f(a)) a :: ls else ls
 //      }
 //    }
@@ -66,14 +67,9 @@ object Par {
       }
   }
 
-  val maxer = (a: Int, b: Int) => {
-    println(s"comparing: $a, & $b")
-    a max b
-  }
-
   implicit class ParIndexedSeqIntExtensions(as: IndexedSeq[Int]) {
     def parMax: Par[Int] =
-      as.parFold(0)(maxer) // (_ max _)
+      as.parFold(0)(_ max _)
   }
 
 }

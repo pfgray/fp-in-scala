@@ -6,14 +6,18 @@ import chapter8.Prop.{SuccessCount, FailedCase, TestCases}
 /**
   * Created by paul on 8/22/16.
   */
-case class Gen[A](sample: State[RNG, A]) {
+case class Gen[+A](sample: State[RNG, A]) {
 
-  //8.6
+  // 8.6
   def flatMap[B](f: A => Gen[B]): Gen[B] =
     Gen(sample.flatMap(f(_).sample))
 
   def listOfN(n: Gen[Int]): Gen[List[A]] =
     n.flatMap(Gen.listOfN(_, this))
+
+  // 8.10
+  def unsized: SGen[A] =
+    SGen(i => this)
 
 }
 

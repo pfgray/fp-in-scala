@@ -58,7 +58,12 @@ class GenTest extends FlatSpec with Matchers {
 
     listGen.sample.run(CountingGenerator(5))._1 should equal(List(6, 7, 8, 9, 10))
 
+  }
 
+  it should "generate unsized SGens" in {
+    val sgen = Gen.choose(0, 5).unsized
+
+    sgen.forSize(10) should equal(sgen.forSize(43))
   }
 
 }
