@@ -8,6 +8,9 @@ import chapter8.Prop.{SuccessCount, FailedCase, TestCases}
   */
 case class Gen[+A](sample: State[RNG, A]) {
 
+  def map[B](f: A => B): Gen[B] =
+    Gen(sample.map(f))
+
   // 8.6
   def flatMap[B](f: A => Gen[B]): Gen[B] =
     Gen(sample.flatMap(f(_).sample))
