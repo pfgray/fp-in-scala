@@ -22,4 +22,8 @@ object SGen {
   //8.12
   def listOf[N](g: Gen[N]): SGen[List[N]] =
     SGen(Gen.listOfN(_, g))
+
+  //8.13
+  def listOf1[N](g: Gen[N]): SGen[List[N]] =
+    SGen(i => Gen.listOfN(i max 1, g))
 }
