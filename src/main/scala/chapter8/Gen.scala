@@ -1,7 +1,7 @@
 package chapter8
 
 import chapter6.{State, RNG}
-import chapter8.Prop.{SuccessCount, FailedCase, TestCases}
+import chapter8.Prop.{MaxSize, SuccessCount, FailedCase, TestCases}
 
 /**
   * Created by paul on 8/22/16.
@@ -60,19 +60,20 @@ object Gen {
     }
 }
 
-case class Prop(run: (TestCases, RNG) => Result) {
+case class Prop(run: (MaxSize, TestCases, RNG) => Result) {
+
   // 8.9
-  def &&(p: Prop): Prop = Prop((tc, rng) => {
-    this.run(tc, rng) match {
-      case Passed => p.run(tc, rng)
+  def &&(p: Prop): Prop = Prop((ms, tc, rng) => {
+    this.run(ms, tc, rng) match {
+      case Passed => p.run(ms, tc, rng)
       case Falsified(f, s) => Falsified(f, s)
     }
   })
 
-  def ||(p: Prop): Prop = Prop((tc, rng) => {
-   this.run(tc, rng) match {
+  def ||(p: Prop): Prop = Prop((ms, tc, rng) => {
+   this.run(ms, tc, rng) match {
       case Passed => Passed
-      case Falsified(f, s) => p.run(tc, rng)
+      case Falsified(f, s) => p.run(ms, tc, rng)
     }
   })
 
@@ -81,8 +82,24 @@ case class Prop(run: (TestCases, RNG) => Result) {
 object Prop {
   type FailedCase = String
   type TestCases = Int
+  type MaxSize = Int
   type SuccessCount = Int
   // type Result = Option[(FailedCase, SuccessCount)]
+
+  def forAll[A](g: SGen[A])(f: A => Boolean): Prop =
+    forAll(g(_))(f)
+
+  def forAll[A](g: Int => Gen[A])(f: A => Boolean): Prop = Prop {
+    (max, n, rng) =>
+      val casesPerSize = (n + (max - 1)) / max
+      val props: Stream[Prop] =
+        Stream.from(0).take((n min max) + 1).map(i => forAll(g)(f))
+      val prop: Prop =
+        props.map(p => Prop { (max, _, rng) =>
+          p.run(max, casesPerSize, rng)
+        }).toIterable.reduce(_ && _)
+      prop.run(max, n, rng)
+  }
 }
 
 sealed trait Result {

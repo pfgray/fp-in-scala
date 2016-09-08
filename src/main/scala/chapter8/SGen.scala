@@ -5,6 +5,8 @@ package chapter8
   */
 case class SGen[+A](forSize: Int => Gen[A]) {
 
+  def apply(n: Int): Gen[A] = forSize(n)
+
   //8.11
   def map[B](f: A => B): SGen[B] =
     SGen(forSize(_).map(f))
@@ -26,4 +28,11 @@ object SGen {
   //8.13
   def listOf1[N](g: Gen[N]): SGen[List[N]] =
     SGen(i => Gen.listOfN(i max 1, g))
+
+//  val sortedProp = forAll(listOf1(smallInt)) { ns =>
+//    val sorted = ns.sorted
+//    sorted.foldRight((true, None)) { (t, n) =>
+//      t match {
+//        case (false, a) =>
+//      }
 }
