@@ -30,6 +30,17 @@ sealed trait Stream[+A] {
       case _ => Empty
     }
 
+  def find(f: A => Boolean): Option[A] =
+    this match {
+      case Cons(h, t) =>
+        if(f(h())) {
+          Some(h())
+        } else {
+          t().find(f)
+        }
+      case Empty => None
+    }
+
   def exists(p: A => Boolean): Boolean =
     this match {
       case Cons(h, t) => p(h()) || t().exists(p)
@@ -102,6 +113,14 @@ sealed trait Stream[+A] {
   def takeWhile2(f: A => Boolean): Stream[A] =
     unfold(0) { n =>
       drop(n).headOption.filter(f).map((_, n + 1))
+    }
+
+  def zip[B](r: Stream[B]): Stream[(A, B)] =
+    unfold(0) { n =>
+      for {
+        a <- drop(n).headOption
+        b <- r.drop(n).headOption
+      } yield ((a, b), n + 1)
     }
 
   def zipWith[B, C](r: Stream[B])(f: (A, B) => C): Stream[C] =

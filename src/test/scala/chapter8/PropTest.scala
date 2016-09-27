@@ -8,10 +8,10 @@ import org.scalatest.{Matchers, FlatSpec}
   */
 class PropTest extends FlatSpec with Matchers {
 
-  val failing = Prop((tc, rng) => {
+  val failing = Prop((max, tc, rng) => {
     Falsified("failed", 0)
   })
-  val passing = Prop((tc, rng) => Passed)
+  val passing = Prop((max, tc, rng) => Passed)
 
   "Prop" should "&& correctly" in {
     (failing && passing).compute should equal(Falsified("failed", 0))
@@ -24,7 +24,7 @@ class PropTest extends FlatSpec with Matchers {
   }
 
   "Prop" should "|| correctly" in {
-    (failing || passing).run(0, SimpleRNG(1L)) should equal(Passed)
+    (failing || passing).run(0, 0, SimpleRNG(1L)) should equal(Passed)
 
     (passing || passing).compute should equal(Passed)
 
@@ -35,7 +35,7 @@ class PropTest extends FlatSpec with Matchers {
 
   implicit class PropWithCompute(prop: Prop) {
     def compute: Result =
-      prop.run(0, SimpleRNG(1L))
+      prop.run(10, 5, SimpleRNG(1L))
   }
 
 }

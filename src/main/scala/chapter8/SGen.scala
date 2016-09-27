@@ -27,12 +27,8 @@ object SGen {
 
   //8.13
   def listOf1[N](g: Gen[N]): SGen[List[N]] =
-    SGen(i => Gen.listOfN(i max 1, g))
+    SGen(i => Gen.listOfN({
+      i max 1
+    }, g))
 
-//  val sortedProp = forAll(listOf1(smallInt)) { ns =>
-//    val sorted = ns.sorted
-//    sorted.foldRight((true, None)) { (t, n) =>
-//      t match {
-//        case (false, a) =>
-//      }
 }

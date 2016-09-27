@@ -1,6 +1,6 @@
 package chapter8
 
-import chapter6.RNG
+import chapter6.{SimpleRNG, RNG}
 import org.scalatest.{Matchers, FlatSpec}
 
 /**
@@ -11,7 +11,6 @@ class SGenTest extends FlatSpec with Matchers {
 
   case class CountingGenerator(start: Int) extends RNG {
     override def nextInt: (Int, RNG) = {
-      println(s"got request for: ${start}")
       (start, CountingGenerator(start + 1))
     }
   }
@@ -35,6 +34,21 @@ class SGenTest extends FlatSpec with Matchers {
 
     val res = listSgen.forSize(0).sample.run(CountingGenerator(3))
     res._1.length should equal(1)
+  }
+
+  "List" should "sort correctly" in {
+    val listGenerator = SGen.listOf1(Gen.choose(1, 100))
+    val sortedProp = Prop.forAll(listGenerator) { ns =>
+      val sorted = ns.sorted
+      val zipped = sorted.zip(sorted.tail)
+      zipped forall { case (a, b) => a <= b }
+      //true
+    }
+
+    val result = sortedProp.run(27, 5, SimpleRNG(0L))
+
+    result should equal(Passed)
+
   }
 
 }
