@@ -1,6 +1,6 @@
 package chapter8
 
-import chapter6.{State, RNG}
+import chapter6.{RNG, State}
 import chapter5.Stream
 import chapter8.Prop.{MaxSize, SuccessCount, FailedCase, TestCases}
 
@@ -128,6 +128,9 @@ object Prop {
   def apply(f: (TestCases,RNG) => Result): Prop =
     Prop { (_,n,rng) => f(n,rng) }
 
+  def apply(f: RNG => Result): Prop =
+    Prop { (_,_,rng) => f(rng) }
+
 }
 
 sealed trait Result {
@@ -138,4 +141,7 @@ case object Passed extends Result {
 }
 case class Falsified(failure: FailedCase, successCount: SuccessCount) extends Result {
   override def isFalsified: Boolean = true
+}
+case object Proved extends Result {
+  override def isFalsified: Boolean = false
 }
