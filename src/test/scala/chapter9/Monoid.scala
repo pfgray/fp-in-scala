@@ -94,36 +94,23 @@ object Monoid {
   def foldMap[A, B](as: List[A], m: Monoid[B])(f: A=>B): B =
     as.map(f).fold(m.zero)(m.op)
 
-  def foldMapV[A, B](v: IndexedSeq[A], m: Monoid[B])(f: A=>B):B ={
-    split(v) match {
+  def foldMapV[A, B](v: IndexedSeq[A], m: Monoid[B])(f: A=>B):B =
+    v.split match {
       case (Nil, Nil) =>
         m.zero
-      case (h::t, Nil) =>
+      case (h+:t, Nil) =>
+        m.op(f(h), foldMapV(t, m)(f))
+      case (Nil, h+:t) =>
+        m.op(f(h), foldMapV(t, m)(f))
+      case (lh+:lt, rh+:rt) =>
         m.op(
-          f(h),
-          foldMapV(t, m)(f),
-        )
-      case (Nil, h::t) =>
-        m.op(
-          f(h),
-          foldMapV(t, m)(f)
-        )
-      case (h1::t1, h2::t2) =>
-        m.op(
-          m.op(
-            h1,
-            foldMapV(t1, m)(f)
-          ),
-          m.op(
-            h2,
-            foldMapV(t1, m)(f)
-          )
+          m.op(f(lh), foldMapV(lt, m)(f)),
+          m.op(f(rh), foldMapV(rt, m)(f))
         )
     }
-  }
 
-  def split(seq: IndexedSeq): (IndexedSeq, IndexedSeq) = {
-    val length = seq.length
-
+  implicit class IndexedSeqOps[A](seq: IndexedSeq[A]) {
+    def split: (IndexedSeq[A], IndexedSeq[A]) =
+      seq.splitAt(seq.length / 2)
   }
 }
