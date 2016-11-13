@@ -71,6 +71,7 @@ case class Prop(run: (MaxSize, TestCases, RNG) => Result) {
     this.run(ms, tc, rng) match {
       case Passed => p.run(ms, tc, rng)
       case Falsified(f, s) => Falsified(f, s)
+      case Proved => Proved
     }
   })
 
@@ -78,6 +79,7 @@ case class Prop(run: (MaxSize, TestCases, RNG) => Result) {
    this.run(ms, tc, rng) match {
       case Passed => Passed
       case Falsified(f, s) => p.run(ms, tc, rng)
+      case Proved => Proved
     }
   })
 
@@ -130,6 +132,11 @@ object Prop {
 
   def apply(f: RNG => Result): Prop =
     Prop { (_,_,rng) => f(rng) }
+
+  def check(p: => Boolean): Prop = {
+    lazy val result = p
+    forAll(Gen.unit(()))(_ => result)
+  }
 
 }
 
