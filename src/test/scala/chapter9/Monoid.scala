@@ -39,7 +39,7 @@ object Monoid {
 
   def optionMonoid[A]: Monoid[Option[A]] = new Monoid[Option[A]] {
     def op(a: Option[A], b: Option[A]) = a orElse b
-    val zero: Option = None
+    val zero: Option[A] = None
   }
 
   def endoMonoid[A]: Monoid[A => A] = new Monoid[A => A] {
@@ -91,16 +91,16 @@ object Monoid {
     associative && rightId && leftId
   }
 
-  def foldMap[A, B](as: List[A], m: Monoid[B])(f: A=>B): B =
+  def foldMap[A, B](as: List[A], m: Monoid[B])(f: A => B): B =
     as.map(f).fold(m.zero)(m.op)
 
-  def foldMapV[A, B](v: IndexedSeq[A], m: Monoid[B])(f: A=>B):B =
+  def foldMapV[A, B](v: IndexedSeq[A], m: Monoid[B])(f: A => B):B =
     v.split match {
-      case (Nil, Nil) =>
+      case (IndexedSeq(), IndexedSeq()) =>
         m.zero
-      case (h+:t, Nil) =>
+      case (h+:t, IndexedSeq()) =>
         m.op(f(h), foldMapV(t, m)(f))
-      case (Nil, h+:t) =>
+      case (IndexedSeq(), h+:t) =>
         m.op(f(h), foldMapV(t, m)(f))
       case (lh+:lt, rh+:rt) =>
         m.op(
