@@ -1,9 +1,9 @@
-package chapter9
+package chapter10
 
-import chapter6.RNG
-import chapter8.Prop.TestCases
+import chapter7.Par
+import chapter7.Par
+import chapter7.Par.{Par, ParExtensions}
 import chapter8._
-import org.scalatest.prop.Configuration.MaxSize
 
 /**
  * Created by nicole on 10/4/16.
@@ -83,7 +83,7 @@ object Monoid {
           if(m.op(m.zero, a) == a) {
             Proved
           } else {
-            Falsified("This monad's identity is not left-assoviative.", 0)
+            Falsified("This monad's identity is not left-associative.", 0)
           }
         }).sample.run(rng)._1
     }
@@ -95,22 +95,53 @@ object Monoid {
     as.map(f).fold(m.zero)(m.op)
 
   def foldMapV[A, B](v: IndexedSeq[A], m: Monoid[B])(f: A => B):B =
-    v.split match {
-      case (IndexedSeq(), IndexedSeq()) =>
+    v match {
+      case IndexedSeq() =>
         m.zero
-      case (h+:t, IndexedSeq()) =>
-        m.op(f(h), foldMapV(t, m)(f))
-      case (IndexedSeq(), h+:t) =>
-        m.op(f(h), foldMapV(t, m)(f))
-      case (lh+:lt, rh+:rt) =>
+      case IndexedSeq(h) =>
+        f(h)
+      case as: IndexedSeq[A] =>
+        val (l, r) = as.split
         m.op(
-          m.op(f(lh), foldMapV(lt, m)(f)),
-          m.op(f(rh), foldMapV(rt, m)(f))
+          foldMapV(l, m)(f), foldMapV(r, m)(f)
         )
     }
 
+  def par[A](m: Monoid[A]): Monoid[Par[A]] = {
+    new Monoid[Par[A]] {
+      override def op(a: Par[A], b: Par[A]): Par[A] = {
+        println(s"Performing op: $a, $b")
+        Par.map2(a, b)(m.op)
+      }
+
+      override def zero: Par[A] = Par.unit(m.zero)
+    }
+  }
+
+  def parFoldMap[A, B](v: IndexedSeq[A], m: Monoid[B])(f: A => B): Par[B] =
+    v match {
+      case IndexedSeq() =>
+        println(s"returning zero...")
+        Par.unit(m.zero)
+      case IndexedSeq(h) =>
+        Par.unit(f(h))
+      case as: IndexedSeq[A] =>
+        println(s"parallelizing: $as")
+        //now for the parallellism:
+        val (l, r) = as.split
+        par(m).op(
+          Par.fork { parFoldMap(l, m)(f) },
+          Par.fork { parFoldMap(r, m)(f) }
+        )
+      case _ => throw new RuntimeException(s"got: $v as unexpected value")
+    }
+
   implicit class IndexedSeqOps[A](seq: IndexedSeq[A]) {
-    def split: (IndexedSeq[A], IndexedSeq[A]) =
-      seq.splitAt(seq.length / 2)
+    def split: (IndexedSeq[A], IndexedSeq[A]) = {
+      val splitted = seq.splitAt(seq.length / 2)
+      println(s"slitted: $splitted")
+      splitted
+    }
+
   }
 }
