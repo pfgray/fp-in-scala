@@ -42,7 +42,6 @@ class SGenTest extends FlatSpec with Matchers {
       val sorted = ns.sorted
       val zipped = sorted.zip(sorted.tail)
       zipped forall { case (a, b) => a <= b }
-      //true
     }
 
     val result = sortedProp.run(27, 5, SimpleRNG(0L))

@@ -2,7 +2,10 @@ package chapter8
 
 import chapter6.{RNG, State}
 import chapter5.Stream
-import chapter8.Prop.{MaxSize, SuccessCount, FailedCase, TestCases}
+import chapter8.Prop.{FailedCase, MaxSize, SuccessCount, TestCases}
+import scala.collection.immutable.{Stream => SStream}
+
+import scala.concurrent.Future
 
 /**
   * Created by paul on 8/22/16.
@@ -143,5 +146,5 @@ case class Falsified(failure: FailedCase, successCount: SuccessCount) extends Re
   override def isFalsified: Boolean = true
 }
 case object Proved extends Result {
-  override def isFalsified: Boolean = false
+  def isFalsified = false
 }
