@@ -1,7 +1,6 @@
 package chapter10
 
 import chapter7.Par
-import chapter7.Par
 import chapter7.Par.{Par, ParExtensions}
 import chapter8._
 
@@ -17,21 +16,25 @@ trait Monoid[A] {
 
 object Monoid {
 
+  // 10.1
   val intAddition = new Monoid[Int] {
     override def op(a: Int, b: Int): Int = a + b
     override def zero: Int = 0
   }
 
+  // 10.2
   val intMultiplication = new Monoid[Int] {
     override def op(a: Int, b: Int): Int = a * b
     override def zero: Int = 1
   }
 
+  // 10.3
   val booleanOr = new Monoid[Boolean] {
     def op(a: Boolean, b: Boolean) = a || b
     def zero: Boolean = false
   }
 
+  // 10.4
   val booleanAnd = new Monoid[Boolean] {
     def op(a: Boolean, b: Boolean): Boolean = a && b
     def zero: Boolean = true
@@ -91,9 +94,18 @@ object Monoid {
     associative && rightId && leftId
   }
 
+  // 10.5
   def foldMap[A, B](as: List[A], m: Monoid[B])(f: A => B): B =
     as.map(f).fold(m.zero)(m.op)
 
+  // 10.6
+  def foldLeft[A, B](as: List[A])(z: B)(f: (B, A) => B): B =
+    foldMap(as, new Monoid[B => B] {
+      def op(a: (B) => B, b: (B) => B): (B) => B = a compose b
+      def zero: B => B = identity
+    })(a => b => f(b, a))(z)
+
+  // 10.7
   def foldMapV[A, B](v: IndexedSeq[A], m: Monoid[B])(f: A => B):B =
     v match {
       case IndexedSeq() =>
@@ -107,6 +119,7 @@ object Monoid {
         )
     }
 
+  // 10.8
   def par[A](m: Monoid[A]): Monoid[Par[A]] = {
     new Monoid[Par[A]] {
       override def op(a: Par[A], b: Par[A]): Par[A] = {
