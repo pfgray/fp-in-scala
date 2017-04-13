@@ -24,8 +24,8 @@ class SGenTest extends FlatSpec with Matchers {
     val sgen = Gen.choose(0, 5)
     val listSgen = SGen.listOf(sgen)
 
-    val res = listSgen.forSize(8).sample.run(CountingGenerator(3))
-    println(res._1)
+    val (res, _) = listSgen.forSize(8).sample.run(CountingGenerator(3))
+    res should be(List(3, 4, 0, 1, 2, 3, 4, 0))
   }
 
   "SGen" should "create nonempty lists" in {

@@ -21,9 +21,9 @@ object WC {
           Part(l, c, r+s)
         case (Part(ll, lc, lr), Part(rl, rc, rr)) =>
           if(lr.length > 0 || rl.length > 0) {
-            Part(ll, lc + rc + 2, rr)
-          } else {
             Part(ll, lc + rc + 1, rr)
+          } else {
+            Part(ll, lc + rc, rr)
           }
       }
 
@@ -31,7 +31,10 @@ object WC {
   }
 
   // 10.11
-  def count(as: List[WC]): WC =
-    Monoid.foldMapV(as.toIndexedSeq, wcMonoid)(identity)
+  def countWords(s: String): WC =
+    Monoid.foldMapV(s, wcMonoid) {
+      case ' ' | '\n' => Part("", 0, "")
+      case c => Stub(c.toString)
+    }
 
 }

@@ -123,7 +123,6 @@ object Monoid {
   def par[A](m: Monoid[A]): Monoid[Par[A]] = {
     new Monoid[Par[A]] {
       override def op(a: Par[A], b: Par[A]): Par[A] = {
-        println(s"Performing op: $a, $b")
         Par.map2(a, b)(m.op)
       }
 
@@ -131,15 +130,14 @@ object Monoid {
     }
   }
 
+  // 10.8 cont..
   def parFoldMap[A, B](v: IndexedSeq[A], m: Monoid[B])(f: A => B): Par[B] =
     v match {
       case IndexedSeq() =>
-        println(s"returning zero...")
         par(m).zero
       case IndexedSeq(h) =>
         Par.unit(f(h))
       case as: IndexedSeq[A] =>
-        println(s"parallelizing: $as")
         //now for the parallellism:
         val (l, r) = as.split
         par(m).op(
@@ -149,10 +147,13 @@ object Monoid {
       case _ => throw new RuntimeException(s"got: $v as unexpected value")
     }
 
+  // 10.9
+  // Hard: Use foldMap to detect whether a given IndexedSeq[Int] is ordered.
+  // You'll need to come up with a creative Monoid
+
   implicit class IndexedSeqOps[A](seq: IndexedSeq[A]) {
     def split: (IndexedSeq[A], IndexedSeq[A]) = {
       val splitted = seq.splitAt(seq.length / 2)
-      println(s"splitted into: $splitted")
       splitted
     }
 

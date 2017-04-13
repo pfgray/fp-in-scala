@@ -14,7 +14,6 @@ class MonoidTest extends FlatSpec with Matchers {
 
     override def op(a: Int, b: Int): Int = {
       val random = ThreadLocalRandom.current().nextInt(1, 5 + 1) * 100
-      println(s"calcuating: ($a+$b), but waiting $random milliseconds")
       Thread.sleep(random)
       a+b
     }
@@ -27,9 +26,7 @@ class MonoidTest extends FlatSpec with Matchers {
     val seq = IndexedSeq(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)
     val toExec = Monoid.parFoldMap(seq, consoleIntAddition)(identity)
 
-    // println(s"got: ${Monoid.foldMapV(seq, consoleIntAddition)(identity)}")
-
-    println(s"got: ${Par.run(es)(toExec)}")
+    Par.run(es)(toExec) should be(120)
 
   }
 
