@@ -19,7 +19,7 @@ class ParTest extends FlatSpec with Matchers {
 
     val sum = pars.map(_.reduce(_ / _))
 
-    sum(new ForkJoinPool(1)).get() should equal(1)
+    Par.run(es)(sum) should equal(1)
   }
 
   it should "filter lists correctly" in {
@@ -27,9 +27,7 @@ class ParTest extends FlatSpec with Matchers {
 
     val filterPar = Par.parFilter(things)(_ > 7)
 
-    val res = filterPar(Executors.newFixedThreadPool(4))
-    val filtered = res.get()
-    filtered should equal(List(8, 9, 10))
+    Par.run(es)(filterPar) should equal(List(8, 9, 10))
   }
 
   it should "dead-lock with certain fixed sized threadpools" in {
@@ -37,9 +35,7 @@ class ParTest extends FlatSpec with Matchers {
 
     val filterPar = Par.parFilter(things)(_ > 7)
 
-    val res = filterPar(Executors.newFixedThreadPool(4))
-    val filtered = res.get()
-    filtered should equal(List(8, 9, 10))
+    Par.run(es)(filterPar) should equal(List(8, 9, 10))
   }
 
   it should "do other stuff" in {
@@ -47,5 +43,7 @@ class ParTest extends FlatSpec with Matchers {
 
     thing.parMax(new ForkJoinPool(10))
   }
+
+  def es = Executors.newFixedThreadPool(4)
 
 }

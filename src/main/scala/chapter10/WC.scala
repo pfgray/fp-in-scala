@@ -1,7 +1,5 @@
 package chapter10
 
-import scala.reflect.macros.whitebox
-
 /**
   * Created by paul on 10/4/16.
   */

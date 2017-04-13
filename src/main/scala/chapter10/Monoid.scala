@@ -135,7 +135,7 @@ object Monoid {
     v match {
       case IndexedSeq() =>
         println(s"returning zero...")
-        Par.unit(m.zero)
+        par(m).zero
       case IndexedSeq(h) =>
         Par.unit(f(h))
       case as: IndexedSeq[A] =>
@@ -152,7 +152,7 @@ object Monoid {
   implicit class IndexedSeqOps[A](seq: IndexedSeq[A]) {
     def split: (IndexedSeq[A], IndexedSeq[A]) = {
       val splitted = seq.splitAt(seq.length / 2)
-      println(s"slitted: $splitted")
+      println(s"splitted into: $splitted")
       splitted
     }
 
