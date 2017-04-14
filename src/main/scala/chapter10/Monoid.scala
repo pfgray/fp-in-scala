@@ -50,6 +50,16 @@ object Monoid {
     val zero: A => A = a => a
   }
 
+
+  // 10.16
+  def productMonoid[A, B](A: Monoid[A], B: Monoid[B]): Monoid[(A, B)] =
+    new Monoid[(A, B)] {
+      def op(a: (A, B), b: (A, B)): (A, B) =
+        (A.op(a._1, b._1), B.op(a._2, b._2))
+
+      def zero = (A.zero, B.zero)
+    }
+
   def monoidLaws[A](m: Monoid[A], gen: Gen[A]): Prop = {
     val associative: Prop = Prop {
       (max, n, rng) =>
