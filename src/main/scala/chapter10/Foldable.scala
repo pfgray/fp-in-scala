@@ -26,7 +26,7 @@ trait Foldable[F[_]] {
 object Foldable {
 
   // 10.12
-  val foldableList: Foldable[List] = new Foldable[List] {
+  def foldableList: Foldable[List] = new Foldable[List] {
 
     def foldLeft[A, B](as: List[A])(z: B)(f: (B, A) => B) =
       as match {
@@ -46,7 +46,7 @@ object Foldable {
       }
   }
 
-  val foldableIndexedSeq: Foldable[IndexedSeq] = new Foldable[IndexedSeq] {
+  def foldableIndexedSeq: Foldable[IndexedSeq] = new Foldable[IndexedSeq] {
     def foldLeft[A, B](as: IndexedSeq[A])(z: B)(f: (B, A) => B) =
       as match {
         case IndexedSeq() => z
@@ -66,7 +66,7 @@ object Foldable {
       }
   }
 
-  val foldableStream: Foldable[Stream] = new Foldable[Stream] {
+  def foldableStream: Foldable[Stream] = new Foldable[Stream] {
     def foldLeft[A, B](as: Stream[A])(z: B)(f: (B, A) => B) =
       as match {
         case Empty => z
@@ -86,7 +86,7 @@ object Foldable {
   }
 
   // 10.13
-  val foldableTree: Foldable[Tree] = new Foldable[Tree] {
+  def foldableTree: Foldable[Tree] = new Foldable[Tree] {
     def foldLeft[A, B](as: Tree[A])(z: B)(f: (B, A) => B): B =
       as match {
         case Leaf(a) => f(z, a)
@@ -108,7 +108,7 @@ object Foldable {
   }
 
   // 10.14
-  val foldOption: Foldable[Option] = new Foldable[Option] {
+  def foldOption: Foldable[Option] = new Foldable[Option] {
     def foldLeft[A, B](as: Option[A])(z: B)(f: (B, A) => B): B =
       as match {
         case None => z
@@ -123,5 +123,32 @@ object Foldable {
     def foldRight[A, B](as: Option[A])(z: B)(f: (A, B) => B) =
       foldLeft(as)(z) { (b, a) => f(a, b) }
   }
+
+  def mergeMapMonoid[K, V](V: Monoid[V]): Monoid[Map[K, V]] =
+    new Monoid[Map[K, V]] {
+      def zero: Map[K, V] = Map.empty
+      def op(a: Map[K, V], b: Map[K, V]) =
+        (a.keySet ++ b.keySet).foldLeft(zero) { (acc, k) =>
+          acc.updated(k, V.op(a.getOrElse(k, V.zero), b.getOrElse(k, V.zero)))
+        }
+    }
+
+  // 10.17
+  def functionMonoid[A, B](B: Monoid[B]): Monoid[A => B] =
+    new Monoid[A => B] {
+      def zero =
+        a => B.zero
+
+      def op(f1: A => B, f2: A => B): A => B =
+        a => B.op(f1(a), f2(a))
+    }
+
+  def mergeMapIntAdditionMonoid[A] = mergeMapMonoid[A, Int](Monoid.intAddition)
+
+  // 10.18
+  def bag[A](as: IndexedSeq[A]): Map[A, Int] =
+    Monoid.foldMap(as.toList, mergeMapIntAdditionMonoid[A]) {
+      a => Map(a -> 1)
+    }
 
 }
