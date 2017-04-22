@@ -1,7 +1,9 @@
 package chapter11
 
+import chapter3.Cons
 import chapter7.Par
 import chapter7.Par.Par
+import chapter8.Gen
 
 /**
   * @author pgray
@@ -33,6 +35,15 @@ trait Monad[F[_]] extends Functor[F] {
   def traverse[A,B](la: List[A])(f: A => F[B]): F[List[B]] =
     sequence(la.map(f))
 
+  import chapter3.List
+
+  // 11.5
+  def replicateM[A](n: Int, ma: F[A]): F[List[A]] =
+    if(n <= 0) {
+      unit(List.empty[A])
+    } else {
+      map2(ma, replicateM(n - 1, ma))((a, lis) => Cons(a, lis))
+    }
 
 }
 

@@ -180,4 +180,7 @@ object List {
         }
     }
   }
+
+  def empty[A]: List[A] = Nil
+
 }
