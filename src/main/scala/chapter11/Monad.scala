@@ -24,12 +24,38 @@ trait Monad[F[_]] extends Functor[F] {
 
 object Monad {
 
+  // 11.1
   def parMonad: Monad[Par] = new Monad[Par] {
+    import chapter7.Par.ParExtensions
     def flatMap[A, B](fa: Par[A])(f: (A) => Par[B]) =
-      fa.
+      fa flatMap f
 
-    def unit[A](a: => A) = ???
+    def unit[A](a: => A) = Par.unit(a)
   }
 
+  def optionMonad: Monad[Option] = new Monad[Option] {
+    def flatMap[A, B](fa: Option[A])(f: (A) => Option[B]) =
+      fa flatMap f
+
+    def unit[A](a: => A) = Some(a)
+  }
+
+  import chapter5.Stream
+
+  def streamMonad: Monad[Stream] = new Monad[Stream] {
+    def flatMap[A, B](fa: Stream[A])(f: (A) => Stream[B]) =
+      fa flatMap f
+
+    override def unit[A](a: => A) = Stream(a)
+  }
+
+  import chapter3.List
+
+  def listMonad: Monad[List] = new Monad[List] {
+    def flatMap[A, B](fa: List[A])(f: (A) => List[B]) =
+      List.flatMap(fa)(f)
+
+    def unit[A](a: => A) = List(a)
+  }
 
 }

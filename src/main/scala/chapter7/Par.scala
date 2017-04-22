@@ -82,6 +82,10 @@ object Par {
   implicit class ParExtensions[A](a: Par[A]) {
     def map[B](f: A => B): Par[B] =
       map2(a, unit())((a, _) => f(a))
+
+    def flatMap[B](f: A => Par[B]): Par[B] =
+      es => f(a(es))(es)
+
   }
 
   implicit class ParIndexedSeqExtensions[A](as: IndexedSeq[A]) {
