@@ -58,4 +58,14 @@ object Monad {
     def unit[A](a: => A) = List(a)
   }
 
+  import chapter6.State
+
+  // 11.2
+  class StateMonad[A] extends Monad[({type λ[α] = State[A, α]})#λ] {
+    def unit[B](b: => B): State[A, B] = State.unit(b)
+
+    def flatMap[B, C](fa: State[A, B])(f: B => State[A, C]): State[A, C] =
+      fa flatMap f
+  }
+
 }
