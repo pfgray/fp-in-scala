@@ -20,6 +20,20 @@ trait Monad[F[_]] extends Functor[F] {
       }
     }
 
+  // 11.3
+  def sequence[A](lma: List[F[A]]): F[List[A]] =
+    lma match {
+      case Nil => unit(Nil)
+      case h :: t =>
+        map2(h, sequence(t)) { (a, la) =>
+          a :: la
+        }
+    }
+
+  def traverse[A,B](la: List[A])(f: A => F[B]): F[List[B]] =
+    sequence(la.map(f))
+
+
 }
 
 object Monad {
