@@ -22,6 +22,9 @@ trait Monad[F[_]] extends Functor[F] {
       }
     }
 
+  def product[A,B](ma: F[A], mb: F[B]): F[(A, B)] =
+    map2(ma, mb)((_, _))
+
   // 11.3
   def sequence[A](lma: List[F[A]]): F[List[A]] =
     lma match {
@@ -35,14 +38,21 @@ trait Monad[F[_]] extends Functor[F] {
   def traverse[A,B](la: List[A])(f: A => F[B]): F[List[B]] =
     sequence(la.map(f))
 
-  import chapter3.List
-
   // 11.5
   def replicateM[A](n: Int, ma: F[A]): F[List[A]] =
     if(n <= 0) {
       unit(List.empty[A])
     } else {
-      map2(ma, replicateM(n - 1, ma))((a, lis) => Cons(a, lis))
+      map2(ma, replicateM(n - 1, ma))((a, lis) => a :: lis)
+    }
+
+  // 11.6
+  def filterM[A](ms: List[A])(f: A => F[Boolean]): F[List[A]] =
+    ms.foldLeft(unit(List.empty[A])) {
+      (z, a) => flatMap(f(a)) {
+        case true => map2(unit(a), z)(_ :: _)
+        case false => z
+      }
     }
 
 }
