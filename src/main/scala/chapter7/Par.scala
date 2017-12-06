@@ -83,8 +83,8 @@ object Par {
     def map[B](f: A => B): Par[B] =
       map2(a, unit())((a, _) => f(a))
 
-    def flatMap[B](f: A => Par[B]): Par[B] =
-      es => f(a(es))(es)
+    def flatMap[B](f: A => Par[B]): Par[B] = ???
+      // es => f(a(es))(es)
 
   }
 
